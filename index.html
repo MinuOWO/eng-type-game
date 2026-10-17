@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>倉鼠烘焙坊 Hamster Typing Bakery</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <canvas id="snow"></canvas>
+  <div class="lights" id="lights"></div>
+
+  <div id="app">
+    <div class="sound-ctrl">
+      <button class="icon-btn" id="btn-music" title="背景音樂">🎵</button>
+      <button class="icon-btn" id="btn-sfx" title="音效">🔊</button>
+    </div>
+
+    <!-- 首頁 -->
+    <section id="screen-home" class="screen active">
+      <div class="coin-badge corner">🪙 <span class="coin-count">0</span></div>
+      <div class="sign big">
+        <h1>倉鼠烘焙坊</h1>
+        <small>✦ Christmas Typing Bakery ✦</small>
+      </div>
+      <div class="hamster-wrap" id="home-hamster"></div>
+      <p class="bubble">聖誕快樂！客人們都在等熱騰騰的甜點喔～</p>
+      <div class="menu">
+        <button class="btn primary big" id="btn-start">🎄 開始營業</button>
+        <button class="btn green big" data-go="collection">📖 甜點圖鑑</button>
+      </div>
+      <p class="best" id="home-best"></p>
+    </section>
+
+    <!-- 關卡選擇 -->
+    <section id="screen-levels" class="screen">
+      <header class="topbar">
+        <button class="icon-btn back" data-go="home">←</button>
+        <div class="sign">選擇關卡</div>
+        <div class="coin-badge">🪙 <span class="coin-count">0</span></div>
+      </header>
+      <div class="level-grid" id="level-grid"></div>
+    </section>
+
+    <!-- 練習頁 -->
+    <section id="screen-play" class="screen">
+      <header class="topbar">
+        <button class="icon-btn back" id="btn-quit">←</button>
+        <div class="sign" id="play-level-name">第 1 關</div>
+        <div class="coin-badge">🪙 <span class="coin-count">0</span></div>
+      </header>
+
+      <div class="hud">
+        <div class="queue" id="queue"></div>
+        <div class="hud-side">
+          <div class="patience" id="patience">
+            <span class="lbl">顧客耐心</span>
+            <div class="hearts" id="hearts"></div>
+          </div>
+          <div class="hud-stats">
+            <div class="pill">⚡ <b id="hud-wpm">0</b> 字/分</div>
+            <div class="pill">訂單 <b id="hud-done">0</b> / <b id="hud-target">10</b></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="stage">
+        <div class="oven panel">
+          <div class="dessert" id="dessert">🍰</div>
+          <div class="hamster-mini" id="play-hamster"></div>
+        </div>
+        <div class="word-card panel">
+          <div class="word" id="word"></div>
+          <div class="typed-box" id="typed-box" aria-label="輸入框"><span id="typed"></span><i class="caret"></i></div>
+          <div class="hint" id="hint">&nbsp;</div>
+        </div>
+      </div>
+
+      <div class="keyboard" id="keyboard"></div>
+      <div class="hands" id="hands"></div>
+
+      <div class="overlay" id="countdown"><div class="count-num" id="count-num">3</div></div>
+      <div class="ime-warn" id="ime-warn">⚠️ 請切換成英文輸入法（按 Shift 或 Ctrl+空白鍵）</div>
+    </section>
+
+    <!-- 成果頁 -->
+    <section id="screen-result" class="screen">
+      <div class="result-card panel">
+        <h2 id="result-title">烘焙完成！</h2>
+        <div class="stars" id="result-stars">★★★</div>
+        <div class="hamster-wrap small" id="result-hamster"></div>
+        <ul class="stats">
+          <li><span>完成題數</span><b id="r-done">0</b></li>
+          <li><span>答對題數</span><b id="r-correct">0</b></li>
+          <li><span>正確率</span><b id="r-acc">0%</b></li>
+          <li><span>獲得金幣</span><b id="r-coins">0</b></li>
+          <li class="wide"><span>打字速度</span><b id="r-wpm">0 字/分</b></li>
+        </ul>
+        <p class="bubble" id="result-msg"></p>
+        <div class="btn-row">
+          <button class="btn" data-go="levels">關卡列表</button>
+          <button class="btn green" id="btn-retry">重新練習</button>
+          <button class="btn primary" id="btn-next">下一關 →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 圖鑑 -->
+    <section id="screen-collection" class="screen">
+      <header class="topbar">
+        <button class="icon-btn back" data-go="home">←</button>
+        <div class="sign">甜點圖鑑</div>
+        <div class="pill" id="col-count">0 / 11</div>
+      </header>
+      <div class="col-body">
+        <div class="col-grid" id="col-grid"></div>
+        <div class="col-detail panel" id="col-detail"></div>
+      </div>
+    </section>
+
+    <!-- 新收藏彈窗 -->
+    <div class="overlay" id="unlock">
+      <div class="unlock-card panel">
+        <h2>🎉 獲得新收藏！</h2>
+        <div class="unlock-dish"><div class="rays"></div><div class="plate"><span id="unlock-emoji">🍪</span></div></div>
+        <h3 id="unlock-name"></h3>
+        <p id="unlock-desc"></p>
+        <button class="btn primary" id="btn-unlock-ok">太好了！</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="audio.js"></script>
+  <script src="fx.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>
